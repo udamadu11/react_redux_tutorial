@@ -1,33 +1,38 @@
-import React, { useEffect } from "react";
-import axios from "axios";
+import React from "react";
+import "./productComponent.module.css";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const ProductComponent = () => {
   const products = useSelector((state) => state.allProducts.products);
-  const { id, title } = products[0];
-  useEffect(() => {
-    fetchProduct();
-  }, []);
-  const fetchProduct = async () => {
-    const response = await axios
-      .get("https://fakestoreapi.com/products")
-      .catch((err) => {
-        console.log(err);
-      });
-    console.log(response.data);
-  };
-  return (
-    <div className="four column wide">
-      <div className="ui link cards">
-        <div className="card">
-          <div className="image"></div>
-          <div className="content">
-            <div className="header">{title}</div>
+
+  const productList = products.map((list) => {
+    const { id, title, price, description, category, image } = list;
+    return (
+      <div className="four wide column" key={id}>
+        <Link to={`/product/${id}`}>
+          <div className="ui link cards">
+            <div className="card">
+              <div className="image">
+                <img
+                  src={image}
+                  alt={title}
+                  style={{ width: "100%", height: "250px" }}
+                />
+              </div>
+              <div className="content">
+                <div className="header">{title}</div>
+                <div className="meta-price">$ {price}</div>
+                <div className="meta">{category}</div>
+              </div>
+            </div>
           </div>
-        </div>
+        </Link>
       </div>
-    </div>
-  );
+    );
+  });
+
+  return <>{productList}</>;
 };
 
 export default ProductComponent;
